@@ -14,6 +14,7 @@ Requires:      jdk >= 1.6
 Requires(pre): shadow-utils
 Requires:      zookeeper >= 3.3.4
 BuildRequires: shared-mime-info
+BuildRequires: jdk >= 1.6
 
 %description
 It is designed to support the following
