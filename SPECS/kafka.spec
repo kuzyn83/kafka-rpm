@@ -1,21 +1,19 @@
-Summary: Kafka is a distributed publish/subscribe messaging system
-Name: kafka
-Version: ##RPMVERSION##
-Release: ##RPMRELEASE##%{?dist}
-Group: Applications/Internet
-License: Apache (v2)
-Source0: kafka-%{version}.tar.gz
-Source1: kafka.init
-Source2: zookeeper.init
-URL: http://kafka.apache.org
-BuildRoot: %{_tmppath}/%{name}-%{version}-root
-Distribution: Niels Basjes
-Vendor: Niels Basjes
-Packager: Niels Basjes <kafka@basjes.nl>
-
-Requires: jdk >= 1.6
+Summary:       Kafka is a distributed publish/subscribe messaging system
+Name:          kafka
+Version:       0.8.1.1
+Release:       2
+Group:         Applications/Internet
+License:       Apache (v2)
+Source0:       https://github.com/apache/kafka/archive/%{version}.zip
+Source1:       kafka.init
+URL:           http://kafka.apache.org
+BuildRoot:     %{_tmppath}/%{name}-%{version}-root
+Distribution:  Niels Basjes
+Vendor:        Niels Basjes <kafka@basjes.nl>
+Requires:      jdk >= 1.6
 Requires(pre): shadow-utils
-Requires: zookeeper >= 3.3.4
+Requires:      zookeeper >= 3.3.4
+BuildRequires: shared-mime-info
 
 %description
 It is designed to support the following
@@ -50,7 +48,7 @@ alternatives --remove kafkahome  /opt/%{name}-%{version}
 
 %prep
 
-%setup
+%setup -q
 
 #%patch0 -p1
 #%patch1 -p1
@@ -89,6 +87,10 @@ echo 'export PATH=${PATH}:/opt/kafka/bin' > %{buildroot}/etc/profile.d/kafka.sh
 [ "%{buildroot}" != "/" ] && %{__rm} -rf %{buildroot}
 
 %changelog
+* Wed Aug 27 2014 Seweryn Ozog <seweryn.ozog@gmail.com> & Marcin Stanislawski <marcin.stanislawski@gmail.com> - 0.8.1.1-2
+- Move everything to spec file
+- Small refactoring
+- Mock compatibility
 * Mon Sep 16 2013 Niels Basjes <kafka@basjes.nl>
 - Refactoring the scripting
 * Fri Mar 15 2013 Mark Poole <mpoole@apache.org>
