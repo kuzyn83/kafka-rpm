@@ -1,7 +1,7 @@
 Summary:       Kafka is a distributed publish/subscribe messaging system
 Name:          kafka
 Version:       0.8.1.1
-Release:       2
+Release:       3
 Group:         Applications/Internet
 License:       Apache (v2)
 Source0:       https://github.com/apache/kafka/archive/%{version}.zip
@@ -12,7 +12,6 @@ Distribution:  Niels Basjes
 Vendor:        Niels Basjes <kafka@basjes.nl>
 Requires:      jdk >= 1.6
 Requires(pre): shadow-utils
-Requires:      zookeeper >= 3.3.4
 BuildRequires: shared-mime-info
 BuildRequires: jdk >= 1.6
 
@@ -88,7 +87,7 @@ echo 'export PATH=${PATH}:/opt/kafka/bin' > %{buildroot}/etc/profile.d/kafka.sh
 [ "%{buildroot}" != "/" ] && %{__rm} -rf %{buildroot}
 
 %changelog
-* Wed Aug 27 2014 Seweryn Ozog <seweryn.ozog@gmail.com> & Marcin Stanislawski <marcin.stanislawski@gmail.com> - 0.8.1.1-2
+* Wed Aug 27 2014 Seweryn Ozog <seweryn.ozog@gmail.com> & Marcin Stanislawski <marcin.stanislawski@gmail.com> - 0.8.1.1-3
 - Move everything to spec file
 - Small refactoring
 - Mock compatibility
