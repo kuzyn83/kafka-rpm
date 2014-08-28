@@ -1,0 +1,8 @@
+--- scala.gradle	2014-08-28 14:34:21.000000000 +0200
++++ scala.gradle	2014-08-28 14:52:40.634259553 +0200
+@@ -2,4 +2,4 @@
+   ext.scalaVersion = '2.8.0'
+ }
+ ext.defaultScalaVersion = '2.8.0'
+-ext.baseScalaVersion = (scalaVersion.startsWith('2.10')) ? '2.10' : scalaVersion
++ext.baseScalaVersion = scalaVersion

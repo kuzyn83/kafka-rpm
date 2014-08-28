@@ -1,7 +1,7 @@
 Summary:       Kafka is a distributed publish/subscribe messaging system
 Name:          kafka
 Version:       0.8.1.1
-Release:       6
+Release:       7
 
 %define alternatives_ver 811%{release}
 %define scala_ver 2.10.1
@@ -19,6 +19,7 @@ Requires(pre): shadow-utils
 BuildRequires: shared-mime-info
 BuildRequires: jdk >= 1.6
 
+Patch0:        scala_gradle.patch
 
 %description
 It is designed to support the following
@@ -55,8 +56,7 @@ alternatives --remove kafkahome  /opt/%{name}-%{version}
 
 %setup -q
 
-#%patch0 -p1
-#%patch1 -p1
+%patch0 -p0
 
 %build
 # Build package
@@ -93,7 +93,7 @@ echo 'export SCALA_VERSION=%{scala_ver}' >> %{buildroot}/etc/profile.d/kafka.sh
 [ "%{buildroot}" != "/" ] && %{__rm} -rf %{buildroot}
 
 %changelog
-* Wed Aug 27 2014 Seweryn Ozog <seweryn.ozog@gmail.com> & Marcin Stanislawski <marcin.stanislawski@gmail.com> - 0.8.1.1-6
+* Wed Aug 27 2014 Seweryn Ozog <seweryn.ozog@gmail.com> & Marcin Stanislawski <marcin.stanislawski@gmail.com> - 0.8.1.1-7
 - Move everything to spec file
 - Small refactoring
 - Mock compatibility
