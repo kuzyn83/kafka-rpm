@@ -1,9 +1,10 @@
 Summary:       Kafka is a distributed publish/subscribe messaging system
 Name:          kafka
 Version:       0.8.1.1
-Release:       5
+Release:       6
 
 %define alternatives_ver 811%{release}
+%define scala_ver 2.10.1
 
 Group:         Applications/Internet
 License:       Apache (v2)
@@ -60,7 +61,7 @@ alternatives --remove kafkahome  /opt/%{name}-%{version}
 %build
 # Build package
 
-./gradlew -PscalaVersion=2.10.4 releaseTarGz -x signArchives
+./gradlew -PscalaVersion=%{scala_ver} releaseTarGz -x signArchives
 
 %install
 
@@ -76,6 +77,7 @@ install -m 755 %{S:1} %{buildroot}/etc/rc.d/init.d/kafka
 # Simply create this oneliner in the spec file
 %{__mkdir_p} %{buildroot}/etc/profile.d/
 echo 'export PATH=${PATH}:/opt/kafka/bin' > %{buildroot}/etc/profile.d/kafka.sh
+echo 'export SCALA_VERSION=%{scala_ver}' >> %{buildroot}/etc/profile.d/kafka.sh
 
 %files
 %defattr(-,kafka,kafka)
@@ -91,7 +93,7 @@ echo 'export PATH=${PATH}:/opt/kafka/bin' > %{buildroot}/etc/profile.d/kafka.sh
 [ "%{buildroot}" != "/" ] && %{__rm} -rf %{buildroot}
 
 %changelog
-* Wed Aug 27 2014 Seweryn Ozog <seweryn.ozog@gmail.com> & Marcin Stanislawski <marcin.stanislawski@gmail.com> - 0.8.1.1-5
+* Wed Aug 27 2014 Seweryn Ozog <seweryn.ozog@gmail.com> & Marcin Stanislawski <marcin.stanislawski@gmail.com> - 0.8.1.1-6
 - Move everything to spec file
 - Small refactoring
 - Mock compatibility
