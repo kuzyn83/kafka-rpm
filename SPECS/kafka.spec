@@ -1,7 +1,10 @@
 Summary:       Kafka is a distributed publish/subscribe messaging system
 Name:          kafka
 Version:       0.8.1.1
-Release:       3
+Release:       5
+
+%define alternatives_ver 811%{release}
+
 Group:         Applications/Internet
 License:       Apache (v2)
 Source0:       https://github.com/apache/kafka/archive/%{version}.zip
@@ -14,6 +17,7 @@ Requires:      jdk >= 1.6
 Requires(pre): shadow-utils
 BuildRequires: shared-mime-info
 BuildRequires: jdk >= 1.6
+
 
 %description
 It is designed to support the following
@@ -38,7 +42,7 @@ getent passwd kafka >/dev/null || \
 exit 0
 
 %post
-alternatives --install /opt/kafka kafkahome  /opt/%{name}-%{version} ##INTEGERVERSION##
+alternatives --install /opt/kafka kafkahome  /opt/%{name}-%{version} %{alternatives_ver}
 
 %preun
 service kafka stop
@@ -87,7 +91,7 @@ echo 'export PATH=${PATH}:/opt/kafka/bin' > %{buildroot}/etc/profile.d/kafka.sh
 [ "%{buildroot}" != "/" ] && %{__rm} -rf %{buildroot}
 
 %changelog
-* Wed Aug 27 2014 Seweryn Ozog <seweryn.ozog@gmail.com> & Marcin Stanislawski <marcin.stanislawski@gmail.com> - 0.8.1.1-3
+* Wed Aug 27 2014 Seweryn Ozog <seweryn.ozog@gmail.com> & Marcin Stanislawski <marcin.stanislawski@gmail.com> - 0.8.1.1-5
 - Move everything to spec file
 - Small refactoring
 - Mock compatibility
