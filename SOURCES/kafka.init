@@ -9,6 +9,11 @@
 #
 
 source /etc/rc.d/init.d/functions
+SYSCONFIG="/etc/sysconfig/kafka"
+
+# pull in sysconfig settings
+[ -f "$SYSCONFIG" ] && . "$SYSCONFIG" || true
+
 
 KAFKA_HOME=/opt/kafka
 KAFKA_USER=kafka
