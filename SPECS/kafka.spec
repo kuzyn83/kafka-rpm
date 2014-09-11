@@ -1,7 +1,7 @@
 Summary:       Kafka is a distributed publish/subscribe messaging system
 Name:          kafka
 Version:       0.8.1.1
-Release:       7
+Release:       8
 
 %define alternatives_ver 811%{release}
 %define scala_ver 2.10.1
@@ -84,7 +84,7 @@ echo -e "export PATH=${PATH}:/opt/kafka/bin\nexport SCALA_VERSION=%{scala_ver}" 
 /opt/%{name}-%{version}
 /var/log/kafka
 /etc/rc.d/init.d/kafka
-/etc/profile.d/kafka.sh
+/etc/sysconfig/kafka
 
 %clean
 #used to cleanup things outside the build area and possibly inside.
