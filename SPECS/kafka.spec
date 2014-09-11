@@ -78,7 +78,6 @@ alternatives --remove kafkahome  /opt/%{name}-%{version}
 %{__mkdir_p} %{buildroot}/etc/rc.d/init.d
 %{__mkdir_p} %{buildroot}/etc/sysconfig
 %{__mkdir_p} %{buildroot}/var/run/kafka
-%{__chown} kafka:kafka %{buildroot}/var/run/kafka
 install -m 755 %{S:1} %{buildroot}/etc/rc.d/init.d/kafka
 
 echo -e "export PATH=${PATH}:/opt/kafka/bin\nexport SCALA_VERSION=%{scala_ver}" > %{buildroot}/etc/sysconfig/kafka
