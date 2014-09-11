@@ -1,0 +1,30 @@
+--- bin/kafka-run-class.sh	2014-04-23 03:28:10.000000000 +0900
++++ bin/kafka-run-class.sh	2014-09-11 20:02:58.439606822 +0900
+@@ -132,6 +132,14 @@
+       DAEMON_MODE="true"
+       shift
+       ;;
++    --pidfile)
++      pid_file=$2
++      shift 2
++      ;;
++    --pidfile=?*)
++      pid_file=${1#--pidfile=}
++      shift
++      ;;
+     *)
+       break
+       ;;
+@@ -148,7 +156,11 @@
+ 
+ # Launch mode
+ if [ "x$DAEMON_MODE" = "xtrue" ]; then
+-  nohup $JAVA $KAFKA_HEAP_OPTS $KAFKA_JVM_PERFORMANCE_OPTS $KAFKA_GC_LOG_OPTS $KAFKA_JMX_OPTS $KAFKA_LOG4J_OPTS -cp $CLASSPATH $KAFKA_OPTS "$@" > "$CONSOLE_OUTPUT_FILE" 2>&1 < /dev/null &
++  if [ -z "$pid_file" ];then
++  	nohup $JAVA $KAFKA_HEAP_OPTS $KAFKA_JVM_PERFORMANCE_OPTS $KAFKA_GC_LOG_OPTS $KAFKA_JMX_OPTS $KAFKA_LOG4J_OPTS -cp $CLASSPATH $KAFKA_OPTS "$@" > "$CONSOLE_OUTPUT_FILE" 2>&1 < /dev/null &
++  else
++	nohup $JAVA $KAFKA_HEAP_OPTS $KAFKA_JVM_PERFORMANCE_OPTS $KAFKA_GC_LOG_OPTS $KAFKA_JMX_OPTS $KAFKA_LOG4J_OPTS -cp $CLASSPATH $KAFKA_OPTS "$@" > "$CONSOLE_OUTPUT_FILE" 2>&1 < /dev/null & echo $! > $pid_file
++  fi
+ else
+   exec $JAVA $KAFKA_HEAP_OPTS $KAFKA_JVM_PERFORMANCE_OPTS $KAFKA_GC_LOG_OPTS $KAFKA_JMX_OPTS $KAFKA_LOG4J_OPTS -cp $CLASSPATH $KAFKA_OPTS "$@"
+ fi

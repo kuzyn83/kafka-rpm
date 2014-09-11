@@ -9,6 +9,7 @@
 #
 
 SERVICE_NAME="kafka"
+KAFKA_PID_FILE="/var/run/kafka/${SERVICE_NAME}.pid"
 
 source /etc/rc.d/init.d/functions
 SYSCONFIG="/etc/sysconfig/kafka"
@@ -23,7 +24,7 @@ KAFKA_USER=kafka
 
 start() {
     echo -n "Starting ${SERVICE_NAME}:"
-    daemon --user=$KAFKA_USER nohup $KAFKA_HOME/bin/kafka-server-start.sh $KAFKA_HOME/config/server.properties > /var/log/kafka/server.out 2> /var/log/kafka/server.err &
+    daemon --user $KAFKA_USER --pidfile $KAFKA_PID_FILE --check $SERVICE_NAME "$KAFKA_HOME/bin/kafka-server-start.sh -daemon --pidfile $KAFKA_PID_FILE $KAFKA_HOME/config/server.properties"
     RETVAL=$?
     echo
     [ $RETVAL -eq 0 ] && touch /var/lock/subsys/$SERVICE_NAME
@@ -32,7 +33,7 @@ start() {
 
 stop() {
     echo -n "Stopping ${SERVICE_NAME}: "
-    killproc $SERVICE_NAME
+    killproc -p $KAFKA_PID_FILE
     RETVAL=$?
     echo
     [ $RETVAL -eq 0 ] && touch /var/lock/subsys/$SERVICE_NAME

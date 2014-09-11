@@ -1,0 +1,36 @@
+--- bin/kafka-server-start.sh	2014-04-23 03:28:10.000000000 +0900
++++ bin/kafka-server-start.sh	2014-09-11 21:53:57.066227375 +0900
+@@ -25,14 +25,24 @@
+ 
+ EXTRA_ARGS="-name kafkaServer -loggc"
+ 
+-COMMAND=$1
+-case $COMMAND in
+-  -daemon)
+-    EXTRA_ARGS="-daemon "$EXTRA_ARGS
+-    shift
+-    ;;
+-  *)
+-    ;;
+-esac
++while [ "$1" != "${1##[-+]}" ]; do
++         case $1 in
++	     -daemon)
++	       EXTRA_ARGS="-daemon "$EXTRA_ARGS
++	       shift
++	       ;;
++	     --pidfile)
++	       EXTRA_ARGS="--pidfile ${2} "$EXTRA_ARGS
++	       shift 2
++	       ;;
++	     --pidfile=?*)
++	       EXTRA_ARGS="--pidfile ${1#--pidfile=} "$EXTRA_ARGS
++	       shift
++	       ;;
++	     *)
++	       ;;
++	 esac
++done
+ 
++echo $EXTRA_ARGS
+ exec $base_dir/kafka-run-class.sh $EXTRA_ARGS kafka.Kafka $@

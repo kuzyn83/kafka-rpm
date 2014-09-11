@@ -20,6 +20,8 @@ BuildRequires: shared-mime-info
 BuildRequires: jdk >= 1.6
 
 Patch0:        scala_gradle.patch
+Patch1:        kafka_run_class_sh.patch
+Patch2:        kafka_server_start_sh.patch
 
 %description
 It is designed to support the following
@@ -57,6 +59,8 @@ alternatives --remove kafkahome  /opt/%{name}-%{version}
 %setup -q
 
 %patch0 -p0
+%patch1 -p0
+%patch2 -p0
 
 %build
 # Build package
@@ -73,6 +77,8 @@ alternatives --remove kafkahome  /opt/%{name}-%{version}
 %{__mkdir_p} %{buildroot}/var/log/kafka
 %{__mkdir_p} %{buildroot}/etc/rc.d/init.d
 %{__mkdir_p} %{buildroot}/etc/sysconfig
+%{__mkdir_p} %{buildroot}/var/run/kafka
+%{__chown} kafka:kafka %{buildroot}/var/run/kafka
 install -m 755 %{S:1} %{buildroot}/etc/rc.d/init.d/kafka
 
 echo -e "export PATH=${PATH}:/opt/kafka/bin\nexport SCALA_VERSION=%{scala_ver}" > %{buildroot}/etc/sysconfig/kafka
@@ -85,6 +91,7 @@ echo -e "export PATH=${PATH}:/opt/kafka/bin\nexport SCALA_VERSION=%{scala_ver}" 
 /var/log/kafka
 /etc/rc.d/init.d/kafka
 /etc/sysconfig/kafka
+/var/run/kafka
 
 %clean
 #used to cleanup things outside the build area and possibly inside.
@@ -94,6 +101,7 @@ echo -e "export PATH=${PATH}:/opt/kafka/bin\nexport SCALA_VERSION=%{scala_ver}" 
 * Wed Sep 10 2014 Marcin Stanislawski <marcin.stanislawski@gmail.com> - 0.8.1.1-8
 - refactoring init.d script
 - moving configuration from profile.d to sysconfig
+- patch kafka startup scripts to provide pidfile
 * Wed Aug 27 2014 Seweryn Ozog <seweryn.ozog@gmail.com> & Marcin Stanislawski <marcin.stanislawski@gmail.com> - 0.8.1.1-7
 - Move everything to spec file
 - Small refactoring
