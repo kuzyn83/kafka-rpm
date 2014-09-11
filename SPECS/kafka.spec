@@ -72,6 +72,7 @@ alternatives --remove kafkahome  /opt/%{name}-%{version}
 %{__cp} -R * %{buildroot}/opt/%{name}-%{version}
 %{__mkdir_p} %{buildroot}/var/log/kafka
 %{__mkdir_p} %{buildroot}/etc/rc.d/init.d
+%{__mkdir_p} %{buildroot}/etc/sysconfig
 install -m 755 %{S:1} %{buildroot}/etc/rc.d/init.d/kafka
 
 echo -e "export PATH=${PATH}:/opt/kafka/bin\nexport SCALA_VERSION=%{scala_ver}" > %{buildroot}/etc/sysconfig/kafka
@@ -90,6 +91,9 @@ echo -e "export PATH=${PATH}:/opt/kafka/bin\nexport SCALA_VERSION=%{scala_ver}" 
 [ "%{buildroot}" != "/" ] && %{__rm} -rf %{buildroot}
 
 %changelog
+* Wed Sep 10 2014 Marcin Stanislawski <marcin.stanislawski@gmail.com> - 0.8.1.1-8
+- refactoring init.d script
+- moving configuration from profile.d to sysconfig
 * Wed Aug 27 2014 Seweryn Ozog <seweryn.ozog@gmail.com> & Marcin Stanislawski <marcin.stanislawski@gmail.com> - 0.8.1.1-7
 - Move everything to spec file
 - Small refactoring
