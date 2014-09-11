@@ -72,12 +72,17 @@ alternatives --remove kafkahome  /opt/%{name}-%{version}
 # Clean out any previous builds not on slash
 [ "%{buildroot}" != "/" ] && %{__rm} -rf %{buildroot}
 
-%{__mkdir_p} %{buildroot}/opt/%{name}-%{version}
+install -d -m 755 %{buildroot}/opt/%{name}-%{version}
 %{__cp} -R * %{buildroot}/opt/%{name}-%{version}
-%{__mkdir_p} %{buildroot}/var/log/kafka
-%{__mkdir_p} %{buildroot}/etc/rc.d/init.d
-%{__mkdir_p} %{buildroot}/etc/sysconfig
-%{__mkdir_p} %{buildroot}/var/run/kafka
+
+install -d -m 755 %{buildroot}/var/log/
+cd %{buildroot}/var/log/
+ln -s /opt/%{name}-%{version}/logs %{name}
+cd -
+
+install -d -m 755 %{buildroot}/etc/rc.d/init.d
+install -d -m 755 %{buildroot}/etc/sysconfig
+install -d -m 755 %{buildroot}/var/run/kafka
 install -m 755 %{S:1} %{buildroot}/etc/rc.d/init.d/kafka
 
 echo -e "export PATH=${PATH}:/opt/kafka/bin\nexport SCALA_VERSION=%{scala_ver}" > %{buildroot}/etc/sysconfig/kafka

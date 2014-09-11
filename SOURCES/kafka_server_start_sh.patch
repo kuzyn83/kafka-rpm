@@ -1,6 +1,6 @@
 --- bin/kafka-server-start.sh	2014-04-23 03:28:10.000000000 +0900
 +++ bin/kafka-server-start.sh	2014-09-11 21:53:57.066227375 +0900
-@@ -25,14 +25,24 @@
+@@ -25,14 +25,23 @@
  
  EXTRA_ARGS="-name kafkaServer -loggc"
  
@@ -31,6 +31,5 @@
 +	       ;;
 +	 esac
 +done
- 
-+echo $EXTRA_ARGS
+
  exec $base_dir/kafka-run-class.sh $EXTRA_ARGS kafka.Kafka $@
