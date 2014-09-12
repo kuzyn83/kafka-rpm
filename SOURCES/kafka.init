@@ -8,6 +8,18 @@
 # Description: Starts and stops the Kafka server
 #
 
+### BEGIN INIT INFO
+# Provides: kafka
+# Required-Start: $local_fs $network
+# Required-Stop: $local_fs $network
+# Should-Start:
+# Should-Stop:
+# Default-Start: 3 4 5
+# Default-Stop: 0 1 2 6
+# Short-Description: Kafka
+# Description:  Starts and stops the Kafka server
+### END INIT INFO
+
 SERVICE_NAME="kafka"
 KAFKA_PID_FILE="/var/run/kafka/${SERVICE_NAME}.pid"
 
@@ -21,13 +33,20 @@ SYSCONFIG="/etc/sysconfig/kafka"
 KAFKA_HOME=/opt/kafka
 KAFKA_USER=kafka
 
+lockfile=/var/lock/subsys/$SERVICE_NAME
 
 start() {
+    local kafka_start_script="$KAFKA_HOME/bin/kafka-server-start.sh"
+    local config="$KAFKA_HOME/config/server.properties"
+
+    [ -x $kafka_start_script ] || exit 5
+    [ -f $config ] || exit 6
+
     echo -n "Starting ${SERVICE_NAME}:"
-    daemon --user $KAFKA_USER --pidfile $KAFKA_PID_FILE --check $SERVICE_NAME "$KAFKA_HOME/bin/kafka-server-start.sh -daemon --pidfile $KAFKA_PID_FILE $KAFKA_HOME/config/server.properties"
+    daemon --user $KAFKA_USER --pidfile $KAFKA_PID_FILE --check $SERVICE_NAME "$kafka_start_script -daemon --pidfile $KAFKA_PID_FILE $config"
     RETVAL=$?
     echo
-    [ $RETVAL -eq 0 ] && touch /var/lock/subsys/$SERVICE_NAME
+    [ $RETVAL -eq 0 ] && touch $lockfile
     return $RETVAL
 }
 
@@ -36,34 +55,62 @@ stop() {
     killproc -p $KAFKA_PID_FILE
     RETVAL=$?
     echo
-    [ $RETVAL -eq 0 ] && touch /var/lock/subsys/$SERVICE_NAME
+    [ $RETVAL -eq 0 ] && touch $lockfile
     return $RETVAL
 
 }
 
+restart() {
+    stop
+    start
+}
+
+reload() {
+    restart
+}
+
+force_reload() {
+    restart
+}
+
+rh_status() {
+    # run checks to determine if the service is running or use generic status
+    status $SERVICE_NAME
+}
+
+rh_status_q() {
+    rh_status >/dev/null 2>&1
+}
 
 
 case "$1" in
-  start)
-    start
-    ;;
-
-  stop)
-    stop
-    ;;
-
-  status)
-    status $SERVICE_NAME
-    ;;
-
-  restart)
-    stop
-    start
-    ;;
-
-  *)
-    echo "Usage: $0 {start|stop|status|restart}"
-    exit 1
-    ;;
-
+    start)
+        rh_status_q && exit 0
+        $1
+        ;;
+    stop)
+        rh_status_q || exit 0
+        $1
+        ;;
+    restart)
+        $1
+        ;;
+    reload)
+        rh_status_q || exit 7
+        $1
+        ;;
+    force-reload)
+        force_reload
+        ;;
+    status)
+        rh_status
+        ;;
+    condrestart|try-restart)
+        rh_status_q || exit 0
+        restart
+        ;;
+    *)
+        echo $"Usage: $0 {start|stop|status|restart|condrestart|try-restart|reload|force-reload}"
+        exit 2
 esac
+exit $?

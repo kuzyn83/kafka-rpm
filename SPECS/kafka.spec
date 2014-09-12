@@ -1,7 +1,7 @@
 Summary:       Kafka is a distributed publish/subscribe messaging system
 Name:          kafka
 Version:       0.8.1.1
-Release:       8
+Release:       9
 
 %define alternatives_ver 811%{release}
 %define scala_ver 2.10.1
@@ -14,8 +14,13 @@ URL:           http://kafka.apache.org
 BuildRoot:     %{_tmppath}/%{name}-%{version}-root
 Distribution:  Niels Basjes
 Vendor:        Niels Basjes <kafka@basjes.nl>
+
 Requires:      jdk >= 1.6
 Requires(pre): shadow-utils
+Requires(post): chkconfig
+Requires(preun): chkconfig
+Requires(preun): initscripts
+
 BuildRequires: shared-mime-info
 BuildRequires: jdk >= 1.6
 
@@ -47,9 +52,13 @@ exit 0
 
 %post
 alternatives --install /opt/kafka kafkahome  /opt/%{name}-%{version} %{alternatives_ver}
+/sbin/chkconfig --add %{name}
 
 %preun
-service kafka stop
+if [ $1 -eq 0 ] ; then
+    /sbin/service %{name} stop >/dev/null 2>&1
+    /sbin/chkconfig --del %{name}
+fi
 
 %postun
 alternatives --remove kafkahome  /opt/%{name}-%{version}
@@ -77,7 +86,7 @@ install -d -m 755 %{buildroot}/opt/%{name}-%{version}
 
 install -d -m 755 %{buildroot}/var/log/
 cd %{buildroot}/var/log/
-ln -s /opt/%{name}-%{version}/logs %{name}
+ln -sf /opt/%{name}-%{version}/logs %{name}
 cd -
 
 install -d -m 755 %{buildroot}/etc/rc.d/init.d
@@ -102,6 +111,9 @@ echo -e "export PATH=${PATH}:/opt/kafka/bin\nexport SCALA_VERSION=%{scala_ver}" 
 [ "%{buildroot}" != "/" ] && %{__rm} -rf %{buildroot}
 
 %changelog
+* Fri Sep 12 2014 Marcin Stanislawski <marcin.stanislawski@gmail.com> - 0.8.1.1-9
+- init script additional options
+- minor bug fixes in spec and init.d scripts
 * Wed Sep 10 2014 Marcin Stanislawski <marcin.stanislawski@gmail.com> - 0.8.1.1-8
 - refactoring init.d script
 - moving configuration from profile.d to sysconfig
