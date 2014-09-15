@@ -75,7 +75,7 @@ force_reload() {
 
 rh_status() {
     # run checks to determine if the service is running or use generic status
-    status $SERVICE_NAME
+    status -p $KAFKA_PID_FILE
 }
 
 rh_status_q() {

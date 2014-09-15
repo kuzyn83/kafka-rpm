@@ -1,7 +1,7 @@
 Summary:       Kafka is a distributed publish/subscribe messaging system
 Name:          kafka
 Version:       0.8.1.1
-Release:       9
+Release:       10
 
 %define alternatives_ver 811%{release}
 %define scala_ver 2.10.1
@@ -84,6 +84,8 @@ alternatives --remove kafkahome  /opt/%{name}-%{version}
 install -d -m 755 %{buildroot}/opt/%{name}-%{version}
 %{__cp} -R * %{buildroot}/opt/%{name}-%{version}
 
+install -d -m 755 %{buildroot}/var/lib/kafka
+install -d -m 755 %{buildroot}/opt/%{name}-%{version}/logs
 install -d -m 755 %{buildroot}/var/log/
 cd %{buildroot}/var/log/
 ln -sf /opt/%{name}-%{version}/logs %{name}
@@ -111,6 +113,8 @@ echo -e "export PATH=${PATH}:/opt/kafka/bin\nexport SCALA_VERSION=%{scala_ver}" 
 [ "%{buildroot}" != "/" ] && %{__rm} -rf %{buildroot}
 
 %changelog
+* Mon Sep 15 2014 Marcin Stanislawski <marcin.stanislawski@gmail.com> - 0.8.1.1-10
+- minor bug fixes (missing dir creation + init.d status function)
 * Fri Sep 12 2014 Marcin Stanislawski <marcin.stanislawski@gmail.com> - 0.8.1.1-9
 - init script additional options
 - minor bug fixes in spec and init.d scripts
